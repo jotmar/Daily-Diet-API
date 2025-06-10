@@ -6,7 +6,8 @@
     "test": "test"
   },
   "scripts": {
-    "dev": "npx tsx watch ./src/server.ts"
+    "dev": "npx tsx watch ./src/server.ts",
+    "knex": "node --import tsx ./node_modules/.bin/knex"
   },
   "keywords": [],
   "author": "",
