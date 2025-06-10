@@ -1,4 +1,5 @@
 import { FastifyInstance } from "fastify";
+import {knex} from "../../db/database"
 
 export async function dietsRouter(app: FastifyInstance) {
 
@@ -6,7 +7,6 @@ export async function dietsRouter(app: FastifyInstance) {
   /*  */
 
   app.get('/', async (request, reply) => {
-    reply.status(200).send({status: "Sucessful", diet: "Diets"})
   })
 
 }
