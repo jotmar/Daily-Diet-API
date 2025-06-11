@@ -63,7 +63,9 @@ export async function userRouter(app: FastifyInstance) {
       })
     }
 
-    reply.cookie("sessionID", user.session_id)
+    reply.setCookie("sessionID", user.session_id, {
+      path: "/"
+    })
 
     return reply.status(200).send({
       msg: "Sucessfull Login"
