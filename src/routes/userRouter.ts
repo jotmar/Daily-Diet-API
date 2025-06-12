@@ -22,6 +22,16 @@ export async function userRouter(app: FastifyInstance) {
 
     const {username, email, password} = requestBodySchema.parse(request.body)
 
+    /* Checking if user already exists */
+
+    const data = await knex('users').where('username', username).orWhere('email', email).first()
+
+    if (data) {
+      return reply.status(409).send({
+        message: "User with this email or username already exists."
+      })
+    }
+
     /* Creating New User in the Database */
 
     await knex('users').insert({
