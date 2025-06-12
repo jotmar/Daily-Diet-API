@@ -3,7 +3,6 @@ import { knex } from "../../db/database";
 
 export async function userIdValidation(request: FastifyRequest, reply: FastifyReply) {
   const {sessionID} = request.cookies
-  console.log(request.cookies)
   
   if(!sessionID) {
     return reply.status(401).send({

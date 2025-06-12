@@ -3,6 +3,7 @@ import {knex} from "../../db/database"
 import {string, z} from "zod"
 import { userIdValidation } from "../middlewares/userIdValidation";
 import { randomUUID } from "crypto";
+import { validateData } from "../utils/validateData";
 
 export async function dietsRouter(app: FastifyInstance) {
   /* User Validation Hook */
@@ -16,7 +17,7 @@ export async function dietsRouter(app: FastifyInstance) {
   app.get('/', async (request, reply) => {
     const data = await knex('diets').where('userID', request.userID).select('*')
 
-    return reply.status(200).send({ data })
+    return reply.status(200).send({ diets: data })
 
   })
 
@@ -31,6 +32,8 @@ export async function dietsRouter(app: FastifyInstance) {
     const {id} = requestParamsSchema.parse(request.params)
 
     const data = await knex('diets').where('id', id).first()
+
+    validateData(reply, data)
 
     return reply.status(200).send({diet: data})
   })
@@ -134,16 +137,18 @@ export async function dietsRouter(app: FastifyInstance) {
 
     /* Update Diet */
 
-    await knex('diets').where({
+    const data = (await knex('diets').where({
       id,
       userID
     }).update({
       name,
       description,
       diet
-    })
+    }).returning("id"))[0]
 
-    return reply.status(201).send()
+    validateData(reply, data)
+
+    return reply.status(204).send()
   })
 
   /* Delete a DIET Route */
@@ -161,12 +166,15 @@ export async function dietsRouter(app: FastifyInstance) {
 
     /* Delete Diet */
 
-    await knex('diets').where({
+    const data = await knex('diets').where({
       id,
       userID: request.userID
     })
+    .returning('id')
     .del()
 
-    return reply.status(201).send()
+    validateData(reply, data)
+
+    return reply.status(204).send()
   })
 }
