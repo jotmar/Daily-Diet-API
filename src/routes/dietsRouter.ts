@@ -35,6 +35,43 @@ export async function dietsRouter(app: FastifyInstance) {
     return reply.status(200).send({diet: data})
   })
 
+  /* Get user metrics */
+  /*  */
+
+  app.get('/metrics', async (request, reply) => {
+    const {userID} = request
+    const data = await knex('diets').where('userID', userID).select('*')
+    const totalDiets = data.length
+    let diet = 0
+    let offDiet = 0
+    let seq = 0
+    let maxSeq = 0
+
+    for (let diets of data) {
+      if(diets.diet) {
+        diet++
+        seq++
+      } else {
+        offDiet++
+        seq = 0
+      }
+
+      if (seq >= maxSeq) {
+        maxSeq = seq
+      }
+    }
+    
+    const metrics = {
+      "total": totalDiets,
+      diet,
+      offDiet,
+      maxSeq
+    }
+
+    return reply.status(200).send({metrics})
+
+  })
+
   /* Create a new DIET Route */
   /*  */
 
