@@ -14,7 +14,7 @@ describe("User Routes", () => {
     await app.close()
   })
 
-  beforeEach(() => {
+  beforeEach(async () => {
     execSync('npm run knex migrate:rollback --all')
     execSync('npm run knex migrate:latest')
   })
