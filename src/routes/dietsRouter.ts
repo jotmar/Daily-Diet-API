@@ -102,7 +102,7 @@ export async function dietsRouter(app: FastifyInstance) {
       id: randomUUID(),
       name,
       description,
-      date: Date.now(),
+      date: new Date().toISOString(),
       diet,
       userID
     })
